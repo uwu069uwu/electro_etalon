@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: "https://electroetalon-production.up.railway.app/api",
 });
 
 API.interceptors.request.use((config) => {
@@ -19,11 +19,11 @@ export const fileUrl = (url) => {
 
   // если приходит /api/...
   if (url.startsWith("/api/")) {
-    return `http://localhost:8000${url}`;
+    return `https://electroetalon-production.up.railway.app${url}`;
   }
 
   // обычный файл
-  return `http://localhost:8000/api/files/${url}`;
+  return `https://electroetalon-production.up.railway.app/api/files/${url}`;
 };
 
 export default API;
