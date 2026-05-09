@@ -42,7 +42,6 @@ const PORT = process.env.PORT || 8000;
 app.listen(PORT, async () => {
   console.log(`Server started on :${PORT}`);
 
-  // Auto-register Telegram webhook if BACKEND_URL is set
   const backendUrl = process.env.BACKEND_URL;
   const tgToken = process.env.TG_TOKEN;
   if (backendUrl && tgToken) {
