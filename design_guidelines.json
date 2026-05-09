@@ -1,0 +1,140 @@
+{
+  "theme": "dark_and_light",
+  "archetype": "4_swiss_high_contrast",
+  "design_philosophy": "Apple-style minimalism, extreme cleanliness, deep dark mode, generous spacing, structural grayscale with precise turquoise/blue accents. Emphasis on smooth 300-500ms transitions and optical alignment.",
+  "colors": {
+    "light": {
+      "background": "0 0% 98%",
+      "foreground": "240 5% 10%",
+      "card": "0 0% 100%",
+      "card_foreground": "240 5% 10%",
+      "popover": "0 0% 100%",
+      "popover_foreground": "240 5% 10%",
+      "primary": "175 100% 39%",
+      "primary_foreground": "0 0% 100%",
+      "secondary": "210 100% 50%",
+      "secondary_foreground": "0 0% 100%",
+      "muted": "240 5% 90%",
+      "muted_foreground": "240 5% 45%",
+      "accent": "175 100% 39%",
+      "accent_foreground": "0 0% 100%",
+      "destructive": "0 84% 60%",
+      "destructive_foreground": "0 0% 100%",
+      "border": "240 5% 90%",
+      "input": "240 5% 90%",
+      "ring": "175 100% 39%"
+    },
+    "dark": {
+      "background": "0 0% 4%",
+      "foreground": "0 0% 98%",
+      "card": "0 0% 8%",
+      "card_foreground": "0 0% 98%",
+      "popover": "0 0% 8%",
+      "popover_foreground": "0 0% 98%",
+      "primary": "175 100% 39%",
+      "primary_foreground": "0 0% 10%",
+      "secondary": "210 100% 50%",
+      "secondary_foreground": "0 0% 98%",
+      "muted": "0 0% 15%",
+      "muted_foreground": "0 0% 65%",
+      "accent": "175 100% 39%",
+      "accent_foreground": "0 0% 10%",
+      "destructive": "0 62% 30%",
+      "destructive_foreground": "0 0% 98%",
+      "border": "0 0% 15%",
+      "input": "0 0% 15%",
+      "ring": "175 100% 39%"
+    }
+  },
+  "typography": {
+    "font_family_heading": "Outfit, sans-serif",
+    "font_family_body": "Figtree, sans-serif",
+    "sizes": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight font-semibold",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight font-semibold",
+      "h3": "text-xl sm:text-2xl tracking-tight font-medium",
+      "body": "text-base leading-relaxed",
+      "small": "text-sm text-muted-foreground uppercase tracking-widest"
+    }
+  },
+  "spacing_and_layout": {
+    "general": "Generous Apple-style spacing. Components should breathe. Use p-6, p-8, p-12.",
+    "border_radius": "rounded-2xl for main cards/images, rounded-full for badges and primary buttons.",
+    "grid_system": {
+      "mobile": "grid-cols-2 gap-4",
+      "tablet": "md:grid-cols-3 gap-6",
+      "desktop": "lg:grid-cols-4 gap-8"
+    },
+    "max_width": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+  },
+  "components": {
+    "navbar": {
+      "style": "Sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/40",
+      "mobile": "Hamburger menu toggles a full-screen or slide-over sheet.",
+      "features": "Search bar (magnifying glass), Cart icon with turquoise count badge (rounded-full), User avatar/Auth button, Dark mode toggle."
+    },
+    "hero_swiper": {
+      "style": "Full width or rounded-3xl container, high contrast text overlays (bg-black/30), pagination bullets (turquoise active state).",
+      "behavior": "Autoplay, smooth slide transition."
+    },
+    "category_nav": {
+      "style": "Horizontal scrollable list, hidden scrollbar. Sticky under navbar on scroll.",
+      "items": "Pill-shaped buttons, active state: bg-primary text-primary-foreground, inactive: bg-muted text-muted-foreground hover:bg-muted/80."
+    },
+    "product_card": {
+      "style": "Cardless or subtle bg-card with rounded-2xl, overflow-hidden. Image container with aspect-square bg-muted/30.",
+      "content": "Image (hover scale-105 transition-transform 500ms), Brand (small text), Name (font-medium truncate 2 lines), Price (font-semibold text-lg). No color selection on card, only 'In Stock'/'Out of Stock' small badge.",
+      "action": "Hover reveals 'Add to Cart' button or it's always visible as a simple icon button."
+    },
+    "product_page": {
+      "layout": "2-column on desktop (Gallery left, Details right).",
+      "gallery": "Swiper for images, thumbnails below.",
+      "interactions": "Color selector changes main gallery image. Qty selector ensures value <= available stock."
+    },
+    "auth": {
+      "flow": "Email -> OTP -> Password -> Save (bcrypt/JWT mock for frontend UI).",
+      "style": "Centered card with glassmorphism or solid bg-card, clean inputs (border-b only or highly rounded)."
+    },
+    "admin_panel": {
+      "layout": "Sidebar navigation + main content area.",
+      "style": "Dense tabular data (Shadcn Table), actions on hover, drag&drop for categories."
+    },
+    "about_us": {
+      "content": "Text blocks with generous line-height, Yandex map iframe (grayscale filter via CSS if possible), and Image gallery."
+    }
+  },
+  "animations": {
+    "durations": "transition-all duration-300 ease-in-out or duration-500",
+    "dark_mode_toggle": "Smooth background color crossfade (duration-500).",
+    "hover_states": "Buttons and links slight opacity change or background tint. Images scale-105.",
+    "page_transitions": "Framer motion fade-in (opacity 0 to 1, y: 10 to 0) on mount."
+  },
+  "media": {
+    "logo": "https://customer-assets.emergentagent.com/job_1e04b893-3a22-4bd1-8e5c-ac13aa871131/artifacts/bhv71rvc_x.jpg",
+    "reference": "https://customer-assets.emergentagent.com/job_1e04b893-3a22-4bd1-8e5c-ac13aa871131/artifacts/xbg2yrwo_image.png",
+    "hero_banners": [
+      "https://images.unsplash.com/photo-1730967844913-29eb5cae5f34?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHwzfHxzbWFydCUyMGhvbWUlMjBkZXZpY2VzfGVufDB8fHx8MTc3NjUwNDA5MHww&ixlib=rb-4.1.0&q=85",
+      "https://images.pexels.com/photos/29091470/pexels-photo-29091470.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    ],
+    "about_us_gallery": [
+      "https://images.unsplash.com/photo-1740803292814-13d2e35924c3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODh8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBlbGVjdHJvbmljcyUyMHN0b3JlfGVufDB8fHx8MTc3NjUwNDA5MHww&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1761795084688-bb007bc51697?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODh8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjBlbGVjdHJvbmljcyUyMHN0b3JlfGVufDB8fHx8MTc3NjUwNDA5MHww&ixlib=rb-4.1.0&q=85"
+    ],
+    "product_placeholders": [
+      "https://images.unsplash.com/photo-1519558260268-cde7e03a0152?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1ODh8MHwxfHNlYXJjaHwxfHxzbWFydCUyMGhvbWUlMjBkZXZpY2VzfGVufDB8fHx8MTc3NjUwNDA5MHww&ixlib=rb-4.1.0&q=85",
+      "https://images.pexels.com/photos/18721086/pexels-photo-18721086.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Strictly adhere to the dark_and_light theme variables in Tailwind config.",
+    "Implement seamless dark mode transitions (300-500ms).",
+    "Ensure the hero swiper auto-scrolls.",
+    "The category list must be sticky and horizontally scrollable.",
+    "Product grid MUST be 2 cols on mobile, 3 tablet, 4+ desktop.",
+    "Install and use 'lucide-react' for all icons.",
+    "Add 'data-testid' to all interactive elements.",
+    "Avoid using Shadcn's basic card for the main product items if it looks too bulky. Go for a cardless Apple-style look.",
+    "Implement the shopping cart logic using Zustand for state management.",
+    "Ensure 'Outfit' and 'Figtree' fonts are properly loaded."
+  ]
+}

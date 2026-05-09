@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap");
+
+:root {
+    --background: 0 0% 98%;
+    --foreground: 240 5% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 5% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 5% 10%;
+    --primary: 175 100% 39%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 5% 94%;
+    --muted-foreground: 240 5% 40%;
+    --accent: 175 100% 39%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 5% 90%;
+    --input: 240 5% 92%;
+    --ring: 175 100% 39%;
+    --radius: 0.875rem;
+}
+
+.dark {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 175 100% 44%;
+    --primary-foreground: 0 0% 8%;
+    --secondary: 210 100% 55%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 175 100% 44%;
+    --accent-foreground: 0 0% 8%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 15%;
+    --input: 0 0% 14%;
+    --ring: 175 100% 44%;
+}
+
+* {
+    border-color: hsl(var(--border));
+}
+
+html {
+    font-family: "Figtree", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    margin: 0;
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    transition:
+        background-color 350ms cubic-bezier(0.22, 1, 0.36, 1),
+        color 350ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 350ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: "Outfit", "Figtree", system-ui, sans-serif;
+    letter-spacing: -0.015em;
+}
+
+.font-display {
+    font-family: "Outfit", "Figtree", system-ui, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+/* Hide scrollbar for category pills */
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Swiper pagination recolor */
+.swiper-pagination-bullet {
+    background: hsl(var(--muted-foreground)) !important;
+    opacity: 0.4;
+}
+
+.swiper-pagination-bullet-active {
+    background: hsl(var(--primary)) !important;
+    opacity: 1;
+    width: 24px !important;
+    border-radius: 4px !important;
+    transition: width 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: hsl(var(--foreground)) !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 999px;
+    background: hsl(var(--background) / 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--border));
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 16px !important;
+    font-weight: 700;
+}
+
+/* Card image smooth zoom */
+.card-img {
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-img-wrap:hover .card-img {
+    transform: scale(1.05);
+}
+
+/* Soft glass card */
+.glass {
+    background: hsl(var(--background) / 0.72);
+    backdrop-filter: saturate(140%) blur(20px);
+    -webkit-backdrop-filter: saturate(140%) blur(20px);
+}
+
+/* Focus ring accent */
+*:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+/* Selection */
+::selection {
+    background: hsl(var(--primary) / 0.25);
+    color: hsl(var(--foreground));
+}
+
+/* Skeleton shimmer */
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg,
+            hsl(var(--muted)) 0%,
+            hsl(var(--muted-foreground) / 0.12) 50%,
+            hsl(var(--muted)) 100%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+    border-radius: 12px;
+}
+
+.swiper-bullet {
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    margin: 0 4px;
+}
+
+.swiper-bullet-active {
+    background: white;
+    width: 16px;
+    border-radius: 8px;
+}

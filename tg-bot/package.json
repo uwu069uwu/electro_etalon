@@ -1,0 +1,19 @@
+{
+  "name": "electro-etalon-tg-bot",
+  "version": "2.0.0",
+  "description": "Telegram bot for Electro Etalon — order management",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "telegraf": "^4.16.3",
+    "mongoose": "^8.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
