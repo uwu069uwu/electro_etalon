@@ -31,7 +31,7 @@ npm start
 TG_TOKEN=8257997204:AAEyjAdUTi-BI7iKv9rAekZ5OXgVYtfX1hs
 TG_ADMIN_CHAT_ID=6779866298
 MONGO_URI=mongodb+srv://...
-API_URL=http://localhost:8000/api
+API_URL=http://https://electroetalon-production.up.railway.app/api
 ```
 
 ## Структура
