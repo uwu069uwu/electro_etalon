@@ -21,8 +21,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-   cors({
-  origin: (process.env.CORS_ORIGINS || "http://localhost:3000").split(","),
+    origin: (process.env.CORS_ORIGINS || "http://localhost:3000").split(","),
     credentials: true,
   }),
 );
