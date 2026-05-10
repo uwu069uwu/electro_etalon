@@ -25,7 +25,7 @@ export const sendOTP = async (req, res) => {
     // 🔥 ВОТ ГЛАВНОЕ
     await sendEmail(email, "Код подтверждения", `Ваш код: ${otp}`);
 
-    res.json({ message: "OTP sent" });
+    res.json({ message: "OTP sent", otp });
   } catch (error) {
     console.error("❌ sendOTP error:", error.message);
     res.status(500).json({ message: "Ошибка отправки" });
