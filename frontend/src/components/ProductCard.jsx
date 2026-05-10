@@ -42,7 +42,7 @@ export const ProductCard = ({ product, index = 0 }) => {
       transition={{ duration: 0.4, delay: Math.min(index * 0.04, 0.3) }}
       className="h-full"
     >
-      <div className="group bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl overflow-hidden transition hover:shadow-xl flex flex-col h-full">
+      <div className="group bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl overflow-hidden transition duration-300 hover:shadow-2xl hover:-translate-y-1 hover:border-primary/40 flex flex-col h-full">
         <Link
           className="block flex-1"
           to={`/product/${product._id}`}
