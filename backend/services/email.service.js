@@ -1,11 +1,19 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: Number(process.env.EMAIL_PORT) || 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 export const sendEmail = async (to, subject, text) => {
   try {
-    const response = await resend.emails.send({
-      from: "onboarding@resend.dev",
+    await transporter.sendMail({
+      from: `"Electro Etalon" <${process.env.EMAIL}>`,
       to,
       subject,
       html: `
@@ -15,8 +23,7 @@ export const sendEmail = async (to, subject, text) => {
         </div>
       `,
     });
-
-    console.log("✅ Email sent:", response);
+    console.log("✅ Email sent to:", to);
   } catch (error) {
     console.error("❌ Email error:", error);
   }
