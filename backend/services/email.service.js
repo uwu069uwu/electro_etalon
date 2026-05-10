@@ -1,9 +1,7 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT) || 587,
-  secure: false,
+  service: "gmail",
   auth: {
     user: process.env.EMAIL,
     pass: process.env.EMAIL_PASS,
@@ -17,14 +15,14 @@ export const sendEmail = async (to, subject, text) => {
       to,
       subject,
       html: `
-        <div style="font-family:sans-serif">
-          <h2>Electro Etalon</h2>
-          <p>${text}</p>
+        <div style="font-family:sans-serif;max-width:480px;margin:auto">
+          <h2 style="color:#111">Electro Etalon</h2>
+          <p style="font-size:16px">${text}</p>
         </div>
       `,
     });
     console.log("✅ Email sent to:", to);
   } catch (error) {
-    console.error("❌ Email error:", error);
+    console.error("❌ Email error:", error.message);
   }
 };
