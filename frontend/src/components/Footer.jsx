@@ -10,7 +10,7 @@ const PHONE_DISPLAY = "+7 771 836 54 54";
 
 export const Footer = () => (
   <footer
-    className="border-t border-border mt-24 bg-background"
+    className="border-t border-border mt-8 bg-background"
     data-testid="site-footer"
   >
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
