@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendEmail = async (to, subject, text) => {
   try {
-    await transporter.sendMail({
+     transporter.sendMail({
       from: `"Electro Etalon" <${process.env.EMAIL}>`,
       to,
       subject,
