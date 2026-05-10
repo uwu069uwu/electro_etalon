@@ -178,9 +178,9 @@ function Gallery({ images, productName, onZoomChange }) {
                 key={i}
                 onClick={() => setActive(i)}
                 className={`flex-shrink-0 h-16 w-16 sm:h-20 sm:w-20 rounded-2xl overflow-hidden border-2 transition-all duration-200 ${i === active
-                  ? "border-gray-800 dark:border-white scale-105 shadow-md"
-                  : "border-transparent opacity-55 hover:opacity-90 hover:border-gray-300 dark:hover:border-neutral-600"
-                  }`}
+  ? "border-gray-800 dark:border-white scale-105 shadow-md opacity-100"
+  : "border-transparent opacity-50 hover:opacity-100 hover:scale-105 hover:border-gray-400 dark:hover:border-neutral-500 hover:shadow-md"
+  }`}
               >
                 {thumbSrc && <img src={thumbSrc} alt="" className="h-full w-full object-cover" />}
               </button>
