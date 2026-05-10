@@ -70,8 +70,9 @@ export const useAuth = create((set, get) => ({
   },
 
   registerRequestOtp: async (email) => {
-    await API.post("/auth/register/request-otp", { email });
-  },
+  const { data } = await API.post("/auth/register/request-otp", { email });
+  if (data.otp) alert("Твой код: " + data.otp);
+},
 
   registerVerify: async (payload) => {
     const { data } = await API.post("/auth/register/verify", payload);
