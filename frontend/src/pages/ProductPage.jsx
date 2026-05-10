@@ -182,7 +182,7 @@ function Gallery({ images, productName, onZoomChange }) {
   : "border-transparent opacity-50 hover:opacity-100 hover:scale-105 hover:border-gray-400 dark:hover:border-neutral-500 hover:shadow-md"
   }`}
               >
-                {thumbSrc && <img src={thumbSrc} alt="" className="h-full w-full object-cover" />}
+                {thumbSrc && <img src={thumbSrc} alt="" className="h-full w-full object-contain" />}
               </button>
             );
           })}
