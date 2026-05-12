@@ -3,328 +3,171 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-// 📩 ОТП ДЛЯ РЕГИСТРАЦИИ
+const signToken = (user) =>
+  jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: `${process.env.JWT_EXPIRES_HOURS || 168}h` }
+  );
+
+// 📩 Запрос OTP для регистрации
 export const sendOTP = async (req, res) => {
   try {
     const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email обязателен" });
 
-    if (!email) {
-      return res.status(400).json({
-        message: "Email обязателен",
-      });
+    const existing = await User.findOne({ email, password: { $exists: true, $ne: null } });
+    if (existing) {
+      return res.status(400).json({ message: "Аккаунт с этим email уже существует" });
     }
 
-    // ищем пользователя
-    let user = await User.findOne({ email });
-
-    // если уже зарегистрирован
-    if (user && user.password) {
-      return res.status(400).json({
-        message: "Этот email уже зарегистрирован",
-      });
-    }
-
-    // генерируем OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // если пользователя нет — создаём
-    if (!user) {
-      user = new User({
-        email,
-        otp,
-        otpExpires: Date.now() + 10 * 60 * 1000,
-      });
-    } else {
-      // обновляем OTP
-      user.otp = otp;
-      user.otpExpires = Date.now() + 10 * 60 * 1000;
-    }
-
-    await user.save();
-
-    console.log("🔥 OTP:", otp);
-
-    await sendEmail(
-      email,
-      "Код подтверждения",
-      `Ваш код: <b>${otp}</b>`
+    await User.findOneAndUpdate(
+      { email },
+      { email, otp, otpExpires: Date.now() + 10 * 60 * 1000 },
+      { upsert: true, new: true }
     );
 
-    res.json({
-      message: "OTP отправлен",
-    });
-  } catch (error) {
-    console.error("❌ sendOTP error:", error);
+    console.log("🔥 OTP:", otp);
+    sendEmail(email, "Код подтверждения — Electro Etalon", `Ваш код подтверждения: <b style="font-size:24px">${otp}</b><br><br>Код действителен 10 минут.`);
 
-    res.status(500).json({
-      message: "Ошибка сервера",
-    });
+    res.json({ message: "Код отправлен", otp });
+  } catch (err) {
+    console.error("sendOTP error:", err.message);
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 };
 
-// ✅ ПОДТВЕРЖДЕНИЕ OTP + РЕГИСТРАЦИЯ
+// ✅ Подтверждение OTP + регистрация
 export const verifyOTP = async (req, res) => {
   try {
     const { email, otp, password, name } = req.body;
 
     if (!email || !otp || !password || !name) {
-      return res.status(400).json({
-        message: "Заполните все поля",
-      });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({
-        message: "Пароль минимум 6 символов",
-      });
+      return res.status(400).json({ message: "Заполните все поля" });
     }
 
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({
-        message: "Пользователь не найден",
-      });
+      return res.status(400).json({ message: "Сначала запросите код" });
     }
-
     if (String(user.otp) !== String(otp)) {
-      return res.status(400).json({
-        message: "Неверный OTP",
-      });
+      return res.status(400).json({ message: "Неверный код" });
     }
-
     if (user.otpExpires < Date.now()) {
-      return res.status(400).json({
-        message: "OTP истёк",
-      });
+      return res.status(400).json({ message: "Код истёк — запросите новый" });
     }
 
-    // хэшируем пароль
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    user.password = hashedPassword;
+    user.password = await bcrypt.hash(password, 10);
     user.name = name;
     user.otp = null;
     user.otpExpires = null;
-
     await user.save();
 
-    // JWT
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: `${process.env.JWT_EXPIRES_HOURS || 168}h`,
-      }
-    );
-
+    const token = signToken(user);
     res.json({
       token,
-      user: {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
+      user: { id: user._id, email: user.email, name: user.name, role: user.role }
     });
-  } catch (error) {
-    console.error("❌ verifyOTP error:", error);
-
-    res.status(500).json({
-      message: "Ошибка сервера",
-    });
+  } catch (err) {
+    console.error("verifyOTP error:", err.message);
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 };
 
-// 🔑 LOGIN
+// 🔑 Вход
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "Заполните все поля",
-      });
+    const user = await User.findOne({ email, password: { $exists: true, $ne: null } });
+    if (!user) {
+      return res.status(400).json({ message: "Аккаунт с этим email ещё не зарегистрирован" });
     }
 
-    const user = await User.findOne({ email });
-
-    if (!user || !user.password) {
-      return res.status(400).json({
-        message: "Пользователь не найден",
-      });
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(400).json({ message: "Неверный пароль" });
     }
 
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
-
-    if (!isMatch) {
-      return res.status(400).json({
-        message: "Неверный пароль",
-      });
-    }
-
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: `${process.env.JWT_EXPIRES_HOURS || 168}h`,
-      }
-    );
-
+    const token = signToken(user);
     res.json({
       token,
-      user: {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
+      user: { id: user._id, email: user.email, name: user.name, role: user.role }
     });
-  } catch (error) {
-    console.error("❌ login error:", error);
-
-    res.status(500).json({
-      message: "Ошибка сервера",
-    });
+  } catch (err) {
+    console.error("login error:", err.message);
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 };
 
-// 👤 CURRENT USER
+// 👤 Текущий пользователь
 export const getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id)
-      .select("-password");
-
-    if (!user) {
-      return res.status(404).json({
-        message: "Пользователь не найден",
-      });
-    }
-
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "Пользователь не найден" });
     res.json(user);
-  } catch (error) {
-    console.error("❌ getMe error:", error);
-
-    res.status(500).json({
-      message: "Ошибка сервера",
-    });
+  } catch (err) {
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 };
 
-// 🔑 OTP ДЛЯ СБРОСА ПАРОЛЯ
+// 🔑 Запрос OTP для сброса пароля
 export const resetRequestOtp = async (req, res) => {
   try {
     const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email обязателен" });
 
-    if (!email) {
-      return res.status(400).json({
-        message: "Email обязателен",
-      });
-    }
-
-    const user = await User.findOne({ email });
-
+    const user = await User.findOne({ email, password: { $exists: true, $ne: null } });
     if (!user) {
-      return res.json({
-        message:
-          "Если email существует — код отправлен",
-      });
+      return res.status(400).json({ message: "Аккаунт с этим email не найден" });
     }
 
-    const otp = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
-
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
     user.otpExpires = Date.now() + 10 * 60 * 1000;
-
     await user.save();
 
-    console.log("🔑 RESET OTP:", otp);
+    console.log("🔑 Reset OTP:", otp);
+    sendEmail(email, "Сброс пароля — Electro Etalon", `Ваш код для сброса пароля: <b style="font-size:24px">${otp}</b><br><br>Код действителен 10 минут.`);
 
-    await sendEmail(
-      email,
-      "Сброс пароля",
-      `Ваш код: <b>${otp}</b>`
-    );
-
-    res.json({
-      message: "OTP отправлен",
-    });
-  } catch (error) {
-    console.error("❌ resetRequestOtp error:", error);
-
-    res.status(500).json({
-      message: "Ошибка сервера",
-    });
+    res.json({ message: "Код отправлен", otp });
+  } catch (err) {
+    console.error("resetRequestOtp error:", err.message);
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 };
 
-// ✅ ПОДТВЕРЖДЕНИЕ СБРОСА
+// ✅ Подтверждение сброса пароля
 export const resetConfirm = async (req, res) => {
   try {
     const { email, code, new_password } = req.body;
 
     if (!email || !code || !new_password) {
-      return res.status(400).json({
-        message: "Заполните все поля",
-      });
+      return res.status(400).json({ detail: "Заполните все поля" });
     }
-
     if (new_password.length < 6) {
-      return res.status(400).json({
-        message: "Минимум 6 символов",
-      });
+      return res.status(400).json({ detail: "Пароль минимум 6 символов" });
     }
 
     const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(400).json({
-        message: "Пользователь не найден",
-      });
+    if (!user || String(user.otp) !== String(code)) {
+      return res.status(400).json({ detail: "Неверный код" });
     }
-
-    if (String(user.otp) !== String(code)) {
-      return res.status(400).json({
-        message: "Неверный код",
-      });
-    }
-
     if (user.otpExpires < Date.now()) {
-      return res.status(400).json({
-        message: "Код истёк",
-      });
+      return res.status(400).json({ detail: "Код истёк — запросите новый" });
     }
 
-    const hashedPassword = await bcrypt.hash(
-      new_password,
-      10
-    );
-
-    user.password = hashedPassword;
+    user.password = await bcrypt.hash(new_password, 10);
     user.otp = null;
     user.otpExpires = null;
-
     await user.save();
 
-    res.json({
-      message: "Пароль обновлён",
-    });
-  } catch (error) {
-    console.error("❌ resetConfirm error:", error);
-
-    res.status(500).json({
-      message: "Ошибка сервера",
-    });
+    res.json({ message: "Пароль успешно изменён" });
+  } catch (err) {
+    console.error("resetConfirm error:", err.message);
+    res.status(500).json({ detail: "Ошибка сервера" });
   }
 };
